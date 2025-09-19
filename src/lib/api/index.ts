@@ -120,9 +120,6 @@ export {
   type ServiceMethod,
   type CrudService,
   type AuthService as AuthServiceInterface,
-  type CaseService,
-  type UserService,
-  type DataService,
   type WorkflowService,
   
   // Schemas
@@ -195,6 +192,11 @@ export {
   createDataService,
 } from './services/data'
 
+export {
+  IngredientService,
+  ingredientService,
+} from './services/ingredients'
+
 // Logging
 export {
   Logger,
@@ -234,6 +236,7 @@ export class ApiServiceRegistry {
   public readonly users: typeof userService
   public readonly cases: typeof caseService
   public readonly data: typeof dataService
+  public readonly ingredients: typeof ingredientService
   public readonly client: typeof apiClient
   public readonly logger: typeof logger
   public readonly retry: typeof retryUtil
@@ -243,6 +246,7 @@ export class ApiServiceRegistry {
     this.users = userService
     this.cases = caseService
     this.data = dataService
+    this.ingredients = ingredientService
     this.client = apiClient
     this.logger = logger
     this.retry = retryUtil
@@ -269,6 +273,7 @@ export class ApiServiceRegistry {
     users: boolean
     cases: boolean
     data: boolean
+    ingredients: boolean
     overall: boolean
   }> {
     const health = {
@@ -276,6 +281,7 @@ export class ApiServiceRegistry {
       users: false,
       cases: false,
       data: false,
+      ingredients: false,
       overall: false,
     }
 
@@ -289,6 +295,7 @@ export class ApiServiceRegistry {
       health.users = true
       health.cases = true
       health.data = true
+      health.ingredients = true
 
       health.overall = Object.values(health).every(status => status === true)
 
@@ -452,39 +459,3 @@ export const ApiUtils = {
   }),
 }
 
-/**
- * Default exports for convenience
- */
-export default {
-  // Core
-  apiClient,
-  apiServices,
-  
-  // Services
-  authService,
-  userService,
-  caseService,
-  dataService,
-  
-  // Utilities
-  logger,
-  retryUtil,
-  endpointBuilder,
-  
-  // Types
-  schemas,
-  
-  // Factories
-  ApiClientFactory,
-  createApiClient,
-  createAuthService,
-  createUserService,
-  createCaseService,
-  createDataService,
-  createLogger,
-  createRetryUtil,
-  createApiServiceRegistry,
-  
-  // Utils
-  ApiUtils,
-}

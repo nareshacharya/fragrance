@@ -11,7 +11,12 @@ import {
   CheckCircle,
   AlertCircle,
   Plus,
-  ArrowRight
+  ArrowRight,
+  Leaf,
+  Package,
+  Upload,
+  Download,
+  BarChart3
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -30,27 +35,27 @@ export default function DashboardPage() {
       color: 'blue'
     },
     {
+      title: 'Total Ingredients',
+      value: '156',
+      change: '+8',
+      changeType: 'positive' as const,
+      icon: Leaf,
+      color: 'green'
+    },
+    {
       title: 'Projects in Progress',
       value: '8',
       change: '+3',
       changeType: 'positive' as const,
       icon: TrendingUp,
-      color: 'green'
-    },
-    {
-      title: 'Team Members',
-      value: '12',
-      change: '+2',
-      changeType: 'positive' as const,
-      icon: Users,
       color: 'purple'
     },
     {
-      title: 'Pending Reviews',
-      value: '5',
+      title: 'Low Stock Items',
+      value: '3',
       change: '-2',
       changeType: 'negative' as const,
-      icon: Clock,
+      icon: Package,
       color: 'orange'
     }
   ]
@@ -67,24 +72,33 @@ export default function DashboardPage() {
     },
     {
       id: 2,
-      type: 'project',
-      title: 'Summer Collection Project',
-      description: 'Project milestone reached - Phase 2 complete',
-      time: '4 hours ago',
+      type: 'ingredient',
+      title: 'New Rose Oil Added',
+      description: 'Premium Bulgarian rose oil imported and catalogued',
+      time: '3 hours ago',
       status: 'completed',
       user: 'Mike Johnson'
     },
     {
       id: 3,
-      type: 'review',
-      title: 'Quality Review Required',
-      description: 'New formula awaiting quality approval',
-      time: '6 hours ago',
-      status: 'pending',
+      type: 'project',
+      title: 'Summer Collection Project',
+      description: 'Project milestone reached - Phase 2 complete',
+      time: '4 hours ago',
+      status: 'completed',
       user: 'Emma Wilson'
     },
     {
       id: 4,
+      type: 'stock',
+      title: 'Low Stock Alert',
+      description: 'Vanilla extract running low - reorder needed',
+      time: '6 hours ago',
+      status: 'pending',
+      user: 'System'
+    },
+    {
+      id: 5,
       type: 'team',
       title: 'New Team Member Added',
       description: 'Alex Rodriguez joined the Development team',
@@ -103,25 +117,39 @@ export default function DashboardPage() {
       color: 'blue'
     },
     {
+      title: 'Add New Ingredient',
+      description: 'Add a new ingredient to your library',
+      icon: Leaf,
+      href: '/ingredients/create',
+      color: 'green'
+    },
+    {
+      title: 'Import Ingredients',
+      description: 'Bulk import ingredients from CSV file',
+      icon: Upload,
+      href: '/ingredients/import',
+      color: 'purple'
+    },
+    {
+      title: 'Check Stock Levels',
+      description: 'Review ingredient stock and reorder alerts',
+      icon: Package,
+      href: '/ingredients/stock',
+      color: 'orange'
+    },
+    {
       title: 'Start New Project',
       description: 'Create a new fragrance development project',
       icon: TrendingUp,
       href: '/projects/new',
-      color: 'green'
-    },
-    {
-      title: 'Review Pending Items',
-      description: 'Check items awaiting your approval',
-      icon: CheckCircle,
-      href: '/reviews',
-      color: 'orange'
+      color: 'indigo'
     },
     {
       title: 'View Analytics',
       description: 'Analyze project performance and metrics',
-      icon: TrendingUp,
+      icon: BarChart3,
       href: '/analytics',
-      color: 'purple'
+      color: 'teal'
     }
   ]
 

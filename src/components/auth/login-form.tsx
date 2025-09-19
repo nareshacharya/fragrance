@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth, validateCredentials, createCommonAuthErrors } from '@/lib/auth'
 import type { LoginFormProps, AuthCredentials } from '@/lib/auth'
 
@@ -31,6 +31,15 @@ export function LoginForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+
+  // Auto-fill with demo credentials for easier testing
+  useEffect(() => {
+    setFormData({
+      email: 'demo@fragrance.com',
+      password: 'DemoPassword123!',
+      rememberMe: false,
+    })
+  }, [])
 
   /**
    * Handle form input changes
@@ -110,32 +119,13 @@ export function LoginForm({
     }
   }
 
-  /**
-   * Handle demo login (for development/testing)
-   */
-  const handleDemoLogin = async () => {
-    setFormData({
-      email: 'demo@fragrance.com',
-      password: 'DemoPassword123!',
-      rememberMe: false,
-    })
-    
-    // Auto-submit after setting demo credentials
-    setTimeout(() => {
-      handleSubmit(new Event('submit') as any)
-    }, 100)
-  }
 
   return (
     <Card className={`w-full max-w-md mx-auto ${className}`}>
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-        <CardDescription>
-          Sign in to your Fragrance Management account
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent>
+      <CardContent className="pt-6">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Sign In</h2>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Field */}
           <div className="space-y-2">
@@ -217,40 +207,7 @@ export function LoginForm({
           >
             {isSubmitting ? 'Signing In...' : 'Sign In'}
           </Button>
-
-          {/* Demo Login Button (for development) */}
-          {process.env.NODE_ENV === 'development' && (
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={handleDemoLogin}
-              disabled={isSubmitting}
-            >
-              Demo Login
-            </Button>
-          )}
         </form>
-
-        {/* Additional Links */}
-        <div className="mt-6 text-center space-y-2">
-          <a
-            href="/forgot-password"
-            className="text-sm text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
-          >
-            Forgot your password?
-          </a>
-          
-          <div className="text-sm text-neutral-600 dark:text-neutral-400">
-            Don't have an account?{' '}
-            <a
-              href="/register"
-              className="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
-            >
-              Sign up
-            </a>
-          </div>
-        </div>
 
         {/* Error Display */}
         {authState.error && (

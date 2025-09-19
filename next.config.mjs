@@ -2,11 +2,13 @@
 const nextConfig = {
   // Enable experimental features for better performance and developer experience
   experimental: {
-    // Enable typed routes for better type safety
-    typedRoutes: true,
-    // Enable server components logging for debugging
-    serverComponentsExternalPackages: [],
   },
+
+  // Enable typed routes for better type safety
+  typedRoutes: true,
+
+  // Server external packages (moved from experimental)
+  serverExternalPackages: [],
 
   // Image optimization configuration
   images: {
@@ -77,9 +79,6 @@ const nextConfig = {
 
   // React strict mode
   reactStrictMode: true,
-
-  // SWC minification
-  swcMinify: true,
 }
 
 export default nextConfig

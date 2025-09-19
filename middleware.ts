@@ -87,6 +87,10 @@ export function middleware(request: NextRequest) {
 
   // For public routes, allow access
   if (isPublicRoute && !isProtectedRoute) {
+    // If user is authenticated and accessing root path, redirect to dashboard
+    if (pathname === '/' && access) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
     return NextResponse.next()
   }
 

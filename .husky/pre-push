@@ -5,9 +5,13 @@
 echo "🔍 Running TypeScript type checking..."
 npm run type-check
 
-# Run tests
-echo "🧪 Running tests..."
-npm run test
+# Run unit tests
+echo "🧪 Running unit tests..."
+npm run test:ci
+
+# Run E2E tests
+echo "🎭 Running E2E tests..."
+npm run test:e2e
 
 # Run linting
 echo "🔧 Running ESLint..."

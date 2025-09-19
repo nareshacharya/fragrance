@@ -3,3 +3,6 @@
 
 # Run lint-staged to check and fix staged files
 npx lint-staged
+
+# Run fast unit tests for changed files
+npm run test:unit -- --bail --findRelatedTests

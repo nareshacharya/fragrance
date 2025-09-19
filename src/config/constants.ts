@@ -315,6 +315,19 @@ export const API_ENDPOINTS = {
     UPDATE: '/api/ingredients/:id',
     DELETE: '/api/ingredients/:id',
     SEARCH: '/api/ingredients/search',
+    IMPORT: '/api/ingredients/import',
+    VALIDATE: '/api/ingredients/validate',
+    EXPORT: '/api/ingredients/export',
+    SUPPLIERS: '/api/ingredients/suppliers',
+    USAGE: '/api/ingredients/:id/usage',
+    STOCK: '/api/ingredients/:id/stock',
+    STATISTICS: '/api/ingredients/statistics',
+    BATCH: '/api/ingredients/batch',
+    SUPPLIER_CODE: '/api/ingredients/supplier-code/:code',
+    CAS_NUMBER: '/api/ingredients/cas-number/:number',
+    INCI_NAME: '/api/ingredients/inci-name/:name',
+    RECOMMENDATIONS: '/api/ingredients/:id/recommendations',
+    IMPORT_TEMPLATE: '/api/ingredients/import-template',
   },
   
   // Reports
@@ -753,4 +766,141 @@ export const Z_INDEX = {
   MODAL: 1050,
   POPOVER: 1060,
   TOOLTIP: 1070,
+} as const
+
+// Layout Constants
+export const LAYOUT_CONSTANTS = {
+  SIDEBAR_WIDTH: 280,
+  SIDEBAR_COLLAPSED_WIDTH: 64,
+  HEADER_HEIGHT: 64,
+  ACTION_PANEL_HEIGHT: 56,
+  BREADCRUMB_HEIGHT: 40,
+  MOBILE_BREAKPOINT: 768,
+  TABLET_BREAKPOINT: 1024,
+  DESKTOP_BREAKPOINT: 1280,
+} as const
+
+// Navigation Icons Mapping
+export const NAVIGATION_ICONS = {
+  // Layout & Navigation
+  LayoutDashboard: 'LayoutDashboard',
+  BarChart3: 'BarChart3',
+  TrendingUp: 'TrendingUp',
+  FileText: 'FileText',
+  Briefcase: 'Briefcase',
+  List: 'List',
+  User: 'User',
+  Users: 'Users',
+  Workflow: 'Workflow',
+  Settings: 'Settings',
+  
+  // Case Management
+  Beaker: 'Beaker',
+  Shield: 'Shield',
+  Leaf: 'Leaf',
+  PlayCircle: 'PlayCircle',
+  FileTemplate: 'FileTemplate',
+  Clock: 'Clock',
+  Cog: 'Cog',
+  Plug: 'Plug',
+  
+  // Actions
+  UserPlus: 'UserPlus',
+  RefreshCw: 'RefreshCw',
+  CheckCircle: 'CheckCircle',
+  XCircle: 'XCircle',
+  MessageSquare: 'MessageSquare',
+  Paperclip: 'Paperclip',
+  History: 'History',
+  Copy: 'Copy',
+  Trash2: 'Trash2',
+  
+  // UI Elements
+  ChevronRight: 'ChevronRight',
+  ChevronDown: 'ChevronDown',
+  Menu: 'Menu',
+  X: 'X',
+  Search: 'Search',
+  Filter: 'Filter',
+  MoreHorizontal: 'MoreHorizontal',
+  Plus: 'Plus',
+  Edit: 'Edit',
+  Eye: 'Eye',
+  Download: 'Download',
+  Upload: 'Upload',
+} as const
+
+// Action Types
+export const ACTION_TYPES = {
+  PRIMARY: 'primary',
+  SECONDARY: 'secondary',
+  OUTLINE: 'outline',
+  GHOST: 'ghost',
+  DESTRUCTIVE: 'destructive',
+} as const
+
+// Ingredient Management Constants
+export const INGREDIENT_EXPORT_FIELDS = [
+  'name',
+  'type',
+  'category',
+  'supplier',
+  'supplierCode',
+  'cost',
+  'currency',
+  'stockLevel',
+  'minStockLevel',
+  'maxStockLevel',
+  'unit',
+  'casNumber',
+  'inciName',
+  'einECSNumber',
+  'description',
+  'notes',
+  'tags',
+  'isActive',
+  'createdAt',
+  'updatedAt',
+] as const
+
+export const INGREDIENT_IMPORT_RULES = {
+  REQUIRED_FIELDS: ['name', 'type', 'supplier', 'cost', 'stockLevel', 'unit'],
+  OPTIONAL_FIELDS: ['category', 'supplierCode', 'currency', 'minStockLevel', 'casNumber', 'inciName', 'description', 'notes', 'tags'],
+  VALIDATION_RULES: {
+    name: { minLength: 2, maxLength: 100 },
+    supplier: { minLength: 2, maxLength: 100 },
+    cost: { min: 0 },
+    stockLevel: { min: 0 },
+    minStockLevel: { min: 0 },
+  },
+  SUPPORTED_TYPES: ['essential_oil', 'synthetic', 'natural_extract', 'fixative', 'solvent', 'additive'],
+  SUPPORTED_UNITS: ['mg', 'g', 'kg', 'ml', 'l'],
+  SUPPORTED_CURRENCIES: ['USD', 'EUR', 'GBP'],
+} as const
+
+export const INGREDIENT_ACTIONS = {
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
+  IMPORT: 'import',
+  EXPORT: 'export',
+  UPDATE_STOCK: 'update_stock',
+  BULK_DELETE: 'bulk_delete',
+  BULK_UPDATE: 'bulk_update',
+  BULK_TOGGLE_ACTIVE: 'bulk_toggle_active',
+  SEARCH: 'search',
+  FILTER: 'filter',
+  SORT: 'sort',
+} as const
+
+export const INGREDIENT_PERMISSIONS = {
+  VIEW: 'ingredients:view',
+  CREATE: 'ingredients:create',
+  UPDATE: 'ingredients:update',
+  DELETE: 'ingredients:delete',
+  IMPORT: 'ingredients:import',
+  EXPORT: 'ingredients:export',
+  MANAGE_STOCK: 'ingredients:manage_stock',
+  BULK_OPERATIONS: 'ingredients:bulk_operations',
 } as const

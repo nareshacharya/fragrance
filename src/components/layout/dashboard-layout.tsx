@@ -11,6 +11,7 @@ import {
   usePermissions
 } from '@/lib/auth'
 import { HeaderUserInfo } from './header-user-info'
+import { CASE_MANAGEMENT_CONFIG } from '@/config/case-management'
 import { 
   LayoutDashboard,
   FlaskConical,
@@ -22,7 +23,14 @@ import {
   Menu,
   X,
   LogOut,
-  User
+  User,
+  Leaf,
+  Package,
+  Upload,
+  Download,
+  List,
+  Plus,
+  Truck
 } from 'lucide-react'
 
 interface DashboardLayoutProps {
@@ -37,20 +45,79 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
   const isExpiringSoon = useIsSessionExpiringSoon()
   const { permissions } = usePermissions()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  
+  // Get current route for active state
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/dashboard'
 
-  const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, current: true },
-    { name: 'Formulas', href: '/formulas', icon: FlaskConical, current: false },
-    { name: 'Projects', href: '/projects', icon: BarChart3, current: false },
-    { name: 'Team', href: '/team', icon: Users, current: false },
-    { name: 'Analytics', href: '/analytics', icon: BarChart3, current: false },
-    { name: 'Settings', href: '/settings', icon: Settings, current: false },
-  ]
+  // Icon mapping for navigation items
+  const iconMap: Record<string, any> = {
+    'LayoutDashboard': LayoutDashboard,
+    'Briefcase': FlaskConical,
+    'Leaf': Leaf,
+    'BarChart3': BarChart3,
+    'Users': Users,
+    'Settings': Settings,
+    'List': List,
+    'Plus': Plus,
+    'Upload': Upload,
+    'Download': Download,
+    'Truck': Truck,
+    'Package': Package,
+  }
+
+  // Build navigation from case management config
+  const buildNavigation = () => {
+    const navItems: any[] = []
+    
+    // Add modules from case management config
+    Object.values(CASE_MANAGEMENT_CONFIG.modules).forEach(module => {
+      // Skip dashboard module since we'll handle it separately
+      if (module.id === 'dashboard') {
+        navItems.push({
+          name: 'Dashboard',
+          href: '/dashboard',
+          icon: LayoutDashboard,
+          current: currentPath === '/dashboard',
+          type: 'main'
+        })
+        return
+      }
+
+      // Add main module item
+      navItems.push({
+        name: module.label,
+        href: module.items[0]?.href || '#',
+        icon: iconMap[module.icon] || Leaf,
+        current: currentPath.startsWith(module.items[0]?.href || '#'),
+        type: 'module',
+        moduleId: module.id
+      })
+
+      // Add sub-items for ingredient management module
+      if (module.id === 'ingredient_management') {
+        module.items.forEach(item => {
+          navItems.push({
+            name: `  ${item.label}`, // Indent sub-items
+            href: item.href,
+            icon: iconMap[item.icon] || Leaf,
+            current: currentPath === item.href,
+            type: 'sub-item',
+            parentModule: module.id
+          })
+        })
+      }
+    })
+
+    return navItems
+  }
+
+  const navigation = buildNavigation()
 
   const filteredNavigation = navigation.filter(item => {
     // Simple permission-based filtering
-    if (item.name === 'Team' && !permissions?.some(p => p.name.includes('user'))) return false
-    if (item.name === 'Settings' && !permissions?.some(p => p.name.includes('admin'))) return false
+    if (item.name.includes('Team') && !permissions?.some(p => p.name.includes('user'))) return false
+    if (item.name.includes('Settings') && !permissions?.some(p => p.name.includes('admin'))) return false
+    if (item.name.includes('Ingredients') && !permissions?.some(p => p.name.includes('ingredient'))) return false
     return true
   })
 
@@ -115,18 +182,29 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
           <div className="px-3 space-y-1">
             {filteredNavigation.map((item) => {
               const Icon = item.icon
+              const isSubItem = item.type === 'sub-item'
+              const isModule = item.type === 'module'
+              
               return (
                 <a
-                  key={item.name}
+                  key={`${item.name}-${item.href}`}
                   href={item.href}
                   className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                     item.current
                       ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      : isSubItem 
+                        ? 'text-gray-500 hover:bg-gray-50 hover:text-gray-700 ml-4'
+                        : isModule
+                          ? 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 font-semibold'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                 >
                   <Icon className={`mr-3 h-5 w-5 ${
-                    item.current ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'
+                    item.current 
+                      ? 'text-blue-500' 
+                      : isSubItem
+                        ? 'text-gray-400 group-hover:text-gray-500'
+                        : 'text-gray-400 group-hover:text-gray-500'
                   }`} />
                   {item.name}
                 </a>
@@ -172,7 +250,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search formulas, projects..."
+                  placeholder="Search formulas, ingredients, projects..."
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>

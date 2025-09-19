@@ -98,7 +98,7 @@ export type PerfumeStatus =
 export interface Formula {
   id: string
   name: string
-  ingredients: Ingredient[]
+  ingredients: FormulaIngredient[]
   totalWeight: number
   concentration: number
   ph: number
@@ -108,7 +108,7 @@ export interface Formula {
   updatedAt: string
 }
 
-export interface Ingredient {
+export interface FormulaIngredient {
   id: string
   name: string
   type: IngredientType
@@ -398,6 +398,40 @@ export interface UserEvent extends BaseEvent {
 
 export type SystemEvent = PerfumeEvent | ProjectEvent | UserEvent
 
+// Navigation Types - Import from navigation.ts
+export type {
+  NavigationItem,
+  ModuleConfig,
+  CaseAction,
+  ActionCondition,
+  BreadcrumbItem,
+  LayoutConfig,
+  NavigationState,
+  SidebarState,
+  CaseManagementContext,
+  NavigationProviderProps,
+  CaseManagementLayoutProps,
+  NavigationSidebarProps,
+  NavigationMenuProps,
+  NavigationHeaderProps,
+  ActionPanelProps,
+  CaseStatusProps,
+  QuickActionsProps,
+  BreadcrumbProps,
+  UseNavigationReturn,
+  UseSidebarStateReturn,
+  UseBreadcrumbsReturn,
+  RouteMatch,
+  NavigationPermissionCheck,
+  NavigationEvent,
+  LayoutPreset,
+  ResponsiveConfig,
+  NavigationAnimationConfig,
+  NavigationAccessibilityConfig,
+  NavigationThemeConfig,
+  NavigationConfig,
+} from './navigation'
+
 // Theme Types - Import from theme.ts
 export type {
   ThemeMode,
@@ -422,7 +456,6 @@ export type {
 
 // API Types - Import from api.ts
 export type {
-  ApiClientConfig,
   AuthToken,
   ApiRequestMetadata,
   ApiResponseMetadata,
@@ -451,7 +484,6 @@ export type {
   DataServiceInterface,
   WorkflowServiceInterface,
   ApiServiceRegistry,
-  ApiConfiguration,
   ApiMiddleware,
   ApiPlugin,
   ApiEvent,
@@ -461,6 +493,29 @@ export type {
   ApiTimeoutConfig,
   ApiLoggingConfig,
 } from './api'
+
+// Ingredient Types - Import from ingredient.ts with explicit names
+export type {
+  Ingredient as InventoryIngredient,
+  CreateIngredientRequest,
+  UpdateIngredientRequest,
+  IngredientSearchParams,
+  IngredientImportData,
+  IngredientExportOptions,
+  IngredientStockUpdate,
+  IngredientSupplier,
+  IngredientUsage,
+  IngredientBatchOperation,
+  IngredientValidationResult,
+  IngredientImportResult,
+  IngredientStatistics,
+  STOCK_STATUS,
+  STOCK_STATUS_LABELS,
+  STOCK_STATUS_COLORS,
+  INGREDIENT_CATEGORIES,
+  INGREDIENT_CATEGORY_LABELS,
+  INGREDIENT_CATEGORY_COLORS,
+} from './ingredient'
 
 // Error Types
 export interface ValidationError {

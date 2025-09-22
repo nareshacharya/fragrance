@@ -6,7 +6,7 @@ import { X } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { useModalKeyboardNavigation } from '../../lib/accessibility/hooks'
 import { ARIA_ROLES, KEYBOARD_CODES, STANDARD_LABELS } from '../../lib/accessibility/constants'
-import { FocusTrap, FocusInitial } from './focus-trap'
+import { FocusTrap } from './focus-trap'
 import { ScreenReaderAnnouncement } from './screen-reader-announcement'
 
 const Modal = DialogPrimitive.Root
@@ -79,9 +79,7 @@ const ModalContent = React.forwardRef<
           aria-describedby={description ? "modal-description" : undefined}
           {...props}
         >
-          <FocusInitial>
-            {children}
-          </FocusInitial>
+          {children}
           
           <DialogPrimitive.Close 
             className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 data-[state=open]:text-neutral-500 dark:ring-offset-neutral-950 dark:focus:ring-neutral-300 dark:data-[state=open]:bg-neutral-800 dark:data-[state=open]:text-neutral-400"

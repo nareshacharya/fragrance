@@ -202,7 +202,7 @@ export function NavigationAnnouncement({
   announce = true,
   className = ''
 }: NavigationAnnouncementProps) {
-  const { announce } = useAnnouncement();
+  const { announce: announceHook } = useAnnouncement();
   const previousPageRef = useRef<string>('');
 
   useEffect(() => {
@@ -210,13 +210,13 @@ export function NavigationAnnouncement({
 
     const currentPage = section ? `${pageTitle}, ${section}` : pageTitle;
     if (currentPage !== previousPageRef.current) {
-      announce(currentPage, {
+      announceHook(currentPage, {
         clearPrevious: true,
         priority: 'polite'
       });
       previousPageRef.current = currentPage;
     }
-  }, [pageTitle, section, announce, announce]);
+  }, [pageTitle, section, announce, announceHook]);
 
   return (
     <div

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '../../lib/utils'
-import { useAccessibleForm, useAnnouncement } from '@/lib/accessibility'
+import { useAnnouncement } from '@/lib/accessibility'
 import { ARIA_ATTRIBUTES, ARIA_LABELS, FORM_DESCRIPTIONS } from '@/lib/accessibility/constants'
 
 const inputVariants = cva(
@@ -68,7 +68,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputRef = React.useRef<HTMLInputElement>(null)
     const [validationError, setValidationError] = React.useState<string>('')
     const [isValid, setIsValid] = React.useState<boolean>(true)
-    const { announceError, announceSuccess } = useAnnouncement()
+    const { announceError, announceSuccess: announceSuccessHook } = useAnnouncement()
 
     // Combine refs
     React.useImperativeHandle(ref, () => inputRef.current!, [])
@@ -77,7 +77,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || `input-${React.useId()}`
     const errorId = `${inputId}-error`
     const helperId = `${inputId}-helper`
-    const descriptionId = describedBy || `${inputId}-description`
 
     // Determine variant based on error/success states
     const inputVariant = error || validationError ? 'error' : success ? 'success' : variant
@@ -98,8 +97,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         }
       } else if (props.type === 'number' && value) {
         const num = parseFloat(value)
-        const min = parseFloat(props.min || '')
-        const max = parseFloat(props.max || '')
+        const min = parseFloat(String(props.min || ''))
+        const max = parseFloat(String(props.max || ''))
 
         if (isNaN(num)) {
           error = FORM_DESCRIPTIONS.INVALID_NUMBER
@@ -119,11 +118,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       if (announceErrors && error && error !== previousError) {
         announceError(`${ariaLabel || 'Field'}: ${error}`)
       } else if (announceSuccess && !error && previousError) {
-        announceSuccess(`${ariaLabel || 'Field'}: Valid`)
+        announceSuccessHook(`${ariaLabel || 'Field'}: Valid`)
       }
       
       return !error
-    }, [required, ariaLabel, props.type, props.min, props.max, onValidationChange, validationError, announceErrors, announceSuccess, announceError, announceSuccess])
+    }, [required, ariaLabel, props.type, props.min, props.max, onValidationChange, validationError, announceErrors, announceSuccess, announceError, announceSuccessHook])
 
     // Handle change
     const handleChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,8 +143,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     
     const ariaAttributes = {
       id: inputId,
-      [ARIA_ATTRIBUTES.STATE_REQUIRED]: required.toString(),
-      [ARIA_ATTRIBUTES.STATE_INVALID]: (!isValid || error || !!validationError).toString(),
+      [ARIA_ATTRIBUTES.STATE_REQUIRED]: required,
+      [ARIA_ATTRIBUTES.STATE_INVALID]: (!isValid || error || !!validationError),
       ...(ariaLabel && { [ARIA_ATTRIBUTES.PROP_LABEL]: ariaLabel }),
       ...(ariaLabelledBy && { [ARIA_ATTRIBUTES.PROP_LABELLEDBY]: ariaLabelledBy }),
       ...(describedBy && { [ARIA_ATTRIBUTES.PROP_DESCRIBEDBY]: describedBy }),
@@ -160,8 +159,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(inputVariants({ variant: inputVariant, inputSize, className }))}
           onChange={handleChange}
           onBlur={handleBlur}
-          {...ariaAttributes}
           {...props}
+          {...ariaAttributes}
         />
         
         {/* Error message */}

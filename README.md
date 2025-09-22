@@ -1,325 +1,256 @@
-# Fragrance Management System
+# Fragrance App
 
-Enterprise-grade perfume formula management system for comprehensive fragrance development, tracking, and collaboration across your entire organization.
+A comprehensive enterprise-grade fragrance management application built with modern web technologies.
 
-## 🚀 Overview
+## 🚀 Features
 
-The Fragrance Management System is a modern, scalable web application built with Next.js 14+ that provides a comprehensive platform for managing perfume formulas, projects, and team collaboration. Designed for enterprise use, it offers robust security, real-time updates, and seamless integration capabilities.
+- **Authentication & Authorization**: Secure JWT-based authentication with role-based access control
+- **Ingredient Management**: Complete CRUD operations for fragrance ingredients with import/export capabilities
+- **Case Management**: Workflow-based case management system with Pega DX integration
+- **API Integration**: Robust API client with Pega DX integration, retry policies, and monitoring
+- **File Management**: Secure file upload, processing, and storage with cloud support
+- **Notifications**: Multi-channel notification system (email, SMS, push, in-app)
+- **Feature Flags**: Runtime feature toggles with A/B testing capabilities
+- **Monitoring**: Comprehensive logging, metrics, and health checks
+- **Security**: Enterprise-grade security with CORS, CSRF, rate limiting, and audit logging
+- **Accessibility**: WCAG 2.1 AA compliant with comprehensive accessibility features
+- **Testing**: Extensive test coverage with unit, integration, and E2E tests
 
-## ✨ Features
+## 🏗️ Architecture
 
-### Core Functionality
-- **Formula Management**: Create, edit, and manage complex perfume formulas with precision
-- **Project Tracking**: Organize and track fragrance development projects
-- **Case Management**: Handle workflow cases and assignments
-- **Team Collaboration**: Real-time collaboration tools for distributed teams
-- **Analytics & Reporting**: Comprehensive reporting and analytics dashboard
-- **File Management**: Secure file upload and management system
+The application follows a modern, scalable architecture with:
 
-### Enterprise Features
-- **Role-based Access Control**: Granular permissions and user management
-- **Audit Logging**: Complete audit trail for compliance
-- **API Integration**: RESTful API with Pega DX integration support
-- **Real-time Updates**: Live notifications and updates
-- **Multi-environment Support**: Development, staging, and production configurations
-- **Security**: Bank-level security with encryption and authentication
+- **Frontend**: Next.js 14 with React 18, TypeScript, and Tailwind CSS
+- **Backend**: Node.js with Express and comprehensive API layer
+- **Database**: PostgreSQL with connection pooling and migrations
+- **Authentication**: JWT-based with refresh tokens and session management
+- **File Storage**: Local and cloud storage (S3, GCS, Azure) support
+- **Monitoring**: Structured logging, metrics collection, and health checks
+- **Testing**: Jest, React Testing Library, and Playwright for comprehensive testing
 
-## 🛠 Technology Stack
+## 📋 Prerequisites
 
-### Frontend
-- **Next.js 14+** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **React 18** - Modern React with concurrent features
+- Node.js 18+ and npm
+- PostgreSQL 14+
+- Redis (optional, for caching and sessions)
+- Docker and Docker Compose (optional, for containerized development)
 
-### Backend
-- **Next.js API Routes** - Serverless API endpoints
-- **TypeScript** - Full-stack type safety
-- **Zod** - Runtime type validation
-- **PostgreSQL** - Primary database
-- **Redis** - Caching and session storage
+## 🚀 Quick Start
 
-### Development Tools
-- **ESLint 9** - Code linting with flat config
-- **Prettier** - Code formatting with Tailwind plugin
-- **Husky** - Git hooks for code quality
-- **Jest** - Testing framework
-- **TypeScript** - Static type checking
-
-### Deployment
-- **Vercel** - Recommended deployment platform
-- **Docker** - Containerization support
-- **Standalone Build** - Self-contained deployment
-
-## 📁 Project Structure
-
-```
-fragrance/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── layout.tsx          # Root layout
-│   │   ├── page.tsx            # Home page
-│   │   └── globals.css         # Global styles
-│   ├── components/             # React components
-│   │   ├── ui/                 # Base UI components
-│   │   └── layouts/            # Layout components
-│   ├── lib/                    # Utility functions
-│   │   └── utils.ts            # Common utilities
-│   ├── types/                  # TypeScript definitions
-│   │   └── index.ts            # Type definitions
-│   └── config/                 # Configuration files
-│       ├── env.ts               # Environment validation
-│       └── constants.ts         # Application constants
-├── .husky/                     # Git hooks
-├── .env.example                # Environment template
-├── .gitignore                  # Git ignore rules
-├── eslint.config.mjs           # ESLint configuration
-├── next.config.ts              # Next.js configuration
-├── package.json                # Dependencies and scripts
-├── postcss.config.mjs          # PostCSS configuration
-├── prettier.config.cjs         # Prettier configuration
-├── tailwind.config.ts          # Tailwind CSS configuration
-└── tsconfig.json               # TypeScript configuration
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** 18.0.0 or higher
-- **npm** 9.0.0 or higher
-- **PostgreSQL** 14 or higher (for production)
-- **Redis** 6 or higher (for caching)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd fragrance
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   # Edit .env.local with your configuration
-   ```
-   
-   > 📋 **Environment Setup**: See [`.env.example`](.env.example) for a complete list of required environment variables with descriptions and example values.
-
-4. **Set up the database**
-   ```bash
-   # Create PostgreSQL database
-   createdb fragrance_db
-   
-   # Run migrations (when available)
-   npm run db:migrate
-   ```
-
-5. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-### Environment Configuration
-
-The application requires several environment variables to be configured. Copy `.env.example` to `.env.local` and update the values:
+### 1. Clone the Repository
 
 ```bash
-# Application Configuration
-NEXT_PUBLIC_APP_NAME="Fragrance Management System"
-NEXT_PUBLIC_APP_VERSION="0.1.0"
-NEXT_PUBLIC_APP_ENV="development"
-
-# Database Configuration
-DATABASE_URL="postgresql://username:password@localhost:5432/fragrance_db"
-
-# Authentication Configuration
-NEXTAUTH_SECRET="your-secret-key-here"
-NEXTAUTH_URL="http://localhost:3000"
-
-# API Configuration
-API_BASE_URL="http://localhost:3000/api"
+git clone <repository-url>
+cd fragrance
 ```
 
-## 📝 Development Workflow
+### 2. Install Dependencies
 
-### Code Quality
+```bash
+npm install
+```
 
-The project enforces high code quality standards through automated tools:
+### 3. Environment Setup
 
-- **ESLint**: Code linting with TypeScript and React rules
-- **Prettier**: Code formatting with Tailwind CSS class sorting
-- **Husky**: Git hooks for pre-commit and pre-push checks
-- **TypeScript**: Static type checking
+Copy the environment template and configure your settings:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your configuration:
+
+```env
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=fragrance_db
+DB_USER=postgres
+DB_PASSWORD=your_password
+
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+
+# API
+PEGA_DX_BASE_URL=https://api.pega.com
+PEGA_DX_API_KEY=your-api-key
+
+# Email (optional)
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=your-username
+SMTP_PASSWORD=your-password
+SMTP_FROM=noreply@fragrance-app.com
+```
+
+### 4. Database Setup
+
+```bash
+# Run migrations
+npm run db:migrate
+
+# Seed development data (optional)
+npm run db:seed
+```
+
+### 5. Start Development Server
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:3000`.
+
+## 🛠️ Development
 
 ### Available Scripts
 
-```bash
-# Development
-npm run dev              # Start development server
-npm run build           # Build for production
-npm run start           # Start production server
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run test` - Run unit tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:e2e` - Run end-to-end tests
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues
+- `npm run type-check` - Run TypeScript type checking
+- `npm run db:migrate` - Run database migrations
+- `npm run db:seed` - Seed database with test data
+- `npm run db:reset` - Reset database (development only)
 
-# Code Quality
-npm run lint            # Run ESLint
-npm run lint:fix        # Fix ESLint issues
-npm run format          # Format code with Prettier
-npm run format:check    # Check code formatting
-npm run type-check      # Run TypeScript type checking
+### Project Structure
 
-# Testing
-npm run test            # Run tests
-npm run test:watch      # Run tests in watch mode
-npm run test:coverage   # Run tests with coverage
-
-# Git Hooks
-npm run prepare         # Install Husky hooks
+```
+src/
+├── app/                    # Next.js app directory
+│   ├── dashboard/          # Dashboard pages
+│   ├── ingredients/        # Ingredient management pages
+│   ├── login/             # Authentication pages
+│   └── ...
+├── components/            # React components
+│   ├── auth/              # Authentication components
+│   ├── ingredients/       # Ingredient management components
+│   ├── ui/                # Reusable UI components
+│   └── ...
+├── config/                # Configuration system
+│   ├── features/          # Feature-based configuration
+│   ├── environments/      # Environment-specific configs
+│   └── ...
+├── lib/                   # Utility libraries
+│   ├── api/               # API client and services
+│   ├── auth/              # Authentication utilities
+│   ├── accessibility/    # Accessibility utilities
+│   └── ...
+├── hooks/                 # Custom React hooks
+├── types/                 # TypeScript type definitions
+└── test-utils/            # Testing utilities
 ```
 
-### Git Hooks
+### Configuration System
 
-The project uses Husky for git hooks:
+The application uses a sophisticated feature-based configuration system:
 
-- **Pre-commit**: Runs lint-staged to check and fix staged files
-- **Pre-push**: Runs type checking and tests before pushing
+- **Feature Configurations**: Modular configuration for each feature (auth, api, database, etc.)
+- **Environment Overrides**: Environment-specific configuration overrides
+- **Validation**: Comprehensive configuration validation with Zod schemas
+- **Hot Reload**: Development-time configuration hot reloading
+- **Type Safety**: Full TypeScript support with generated types
 
-## 🏗 Architecture
+### Testing
 
-### Design Principles
+The application has comprehensive test coverage:
 
-- **Modular Architecture**: Clean separation of concerns
-- **Type Safety**: Full TypeScript coverage
-- **Performance**: Optimized for speed and scalability
-- **Security**: Enterprise-grade security measures
-- **Maintainability**: Clean code and documentation
+- **Unit Tests**: Jest and React Testing Library for component and utility testing
+- **Integration Tests**: API and database integration testing
+- **E2E Tests**: Playwright for end-to-end testing
+- **Accessibility Tests**: Automated accessibility testing
+- **Performance Tests**: Performance monitoring and testing
 
-### Key Components
+### Code Quality
 
-1. **App Router**: Next.js 14 App Router for file-based routing
-2. **Component Library**: Reusable UI components
-3. **Type System**: Comprehensive TypeScript definitions
-4. **Configuration**: Environment-based configuration
-5. **Utilities**: Shared utility functions
-
-## 🔧 Configuration
-
-### Next.js Configuration
-
-The `next.config.ts` file includes:
-- TypeScript support
-- Image optimization
-- Security headers
-- Performance optimizations
-
-### Tailwind CSS Configuration
-
-Custom theme with:
-- Perfume industry-inspired color palette
-- Custom animations
-- Component-specific utilities
-- Responsive design system
-
-### ESLint Configuration
-
-ESLint 9 flat config with:
-- TypeScript support
-- React rules
-- Import/export rules
-- Prettier integration
+- **ESLint**: Code linting with custom rules
+- **Prettier**: Code formatting
+- **TypeScript**: Static type checking
+- **Husky**: Git hooks for quality gates
+- **Lint-staged**: Pre-commit linting
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+### Environment Configuration
 
-1. **Connect your repository** to Vercel
-2. **Set environment variables** in Vercel dashboard
-3. **Deploy** automatically on push to main branch
+The application supports multiple environments:
 
-### Docker
+- **Development**: Local development with debugging features
+- **Staging**: Pre-production testing environment
+- **Production**: Live production environment
+- **Test**: Automated testing environment
+
+### Docker Deployment
 
 ```bash
 # Build Docker image
-docker build -t fragrance-management .
+docker build -t fragrance-app .
 
-# Run container
-docker run -p 3000:3000 fragrance-management
+# Run with Docker Compose
+docker-compose up -d
 ```
 
-### Manual Deployment
+### Environment Variables
 
-```bash
-# Build the application
-npm run build
+Required environment variables for production:
 
-# Start production server
-npm run start
+```env
+NODE_ENV=production
+JWT_SECRET=your-production-jwt-secret
+DB_HOST=your-db-host
+DB_NAME=your-db-name
+DB_USER=your-db-user
+DB_PASSWORD=your-db-password
+PEGA_DX_BASE_URL=https://api.pega.com
+PEGA_DX_API_KEY=your-api-key
 ```
 
-## 📊 Monitoring and Analytics
+### Health Checks
 
-### Performance Monitoring
+The application provides health check endpoints:
 
-- Built-in performance monitoring
-- Real-time metrics
-- Error tracking
-- User analytics
+- `GET /health` - Basic health check
+- `GET /health/detailed` - Detailed health information
+- `GET /metrics` - Application metrics
 
-### Logging
+## 📚 Documentation
 
-- Structured logging with JSON format
-- Configurable log levels
-- Request/response logging
-- Error tracking
-
-## 🔒 Security
-
-### Authentication
-
-- JWT-based authentication
-- Role-based access control
-- Session management
-- Password policies
-
-### Data Protection
-
-- Encryption at rest and in transit
-- Input validation and sanitization
-- SQL injection prevention
-- XSS protection
+- [Architecture Guide](docs/architecture.md) - Detailed architecture documentation
+- [Development Guide](docs/development.md) - Development setup and guidelines
+- [Configuration Guide](docs/configuration.md) - Configuration system documentation
+- [API Documentation](docs/api.md) - API reference and examples
+- [Deployment Guide](docs/deployment.md) - Deployment instructions
+- [User Guide](docs/user-guide.md) - User documentation
+- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
+- [Security Guide](docs/security.md) - Security features and best practices
+- [Performance Guide](docs/performance.md) - Performance optimization guide
 
 ## 🤝 Contributing
 
-### Development Setup
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Workflow
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
 
 ### Code Standards
 
-- Follow TypeScript best practices
-- Use meaningful variable names
+- Follow the existing code style
 - Write comprehensive tests
-- Document complex functions
-- Follow the established file structure
-
-### Pull Request Process
-
-1. Ensure all tests pass
-2. Update documentation if needed
-3. Request review from maintainers
-4. Address feedback promptly
+- Update documentation as needed
+- Ensure accessibility compliance
+- Follow security best practices
 
 ## 📄 License
 
@@ -327,41 +258,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-### Documentation
+- **Documentation**: Check the [docs](docs/) directory
+- **Issues**: Report bugs and request features via [GitHub Issues](https://github.com/your-org/fragrance/issues)
+- **Discussions**: Join our [GitHub Discussions](https://github.com/your-org/fragrance/discussions)
+- **Security**: Report security issues via [SECURITY.md](SECURITY.md)
 
-- [API Documentation](docs/api.md)
-- [Component Library](docs/components.md)
-- [Deployment Guide](docs/deployment.md)
+## 🏆 Acknowledgments
 
-### Getting Help
-
-- Create an issue for bugs or feature requests
-- Check existing issues and discussions
-- Join our community discussions
-
-### Contact
-
-- **Email**: support@fragrance-management.com
-- **Documentation**: [docs.fragrance-management.com](https://docs.fragrance-management.com)
-- **Issues**: [GitHub Issues](https://github.com/your-org/fragrance/issues)
-
-## 🗺 Roadmap
-
-### Phase 1 (Current)
-- ✅ Project foundation and setup
-- ✅ Basic authentication and user management
-- ✅ Core formula management features
-
-### Phase 2 (Upcoming)
-- 🔄 Pega DX API integration
-- 🔄 Advanced analytics and reporting
-- 🔄 Real-time collaboration features
-
-### Phase 3 (Future)
-- 📋 Mobile application
-- 📋 Advanced AI features
-- 📋 Third-party integrations
+- Built with [Next.js](https://nextjs.org/)
+- UI components with [Tailwind CSS](https://tailwindcss.com/)
+- Icons from [Lucide React](https://lucide.dev/)
+- Testing with [Jest](https://jestjs.io/) and [Playwright](https://playwright.dev/)
+- Configuration validation with [Zod](https://zod.dev/)
 
 ---
 
-**Built with ❤️ for the fragrance industry**
+**Made with ❤️ by the Fragrance App Team**

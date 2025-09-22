@@ -28,6 +28,9 @@
     "test:all": "npm run test:ci && npm run test:a11y && npm run test:e2e",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "config:validate": "node scripts/validate-config.js",
+    "config:docs": "node scripts/generate-config-docs.js",
+    "config:setup": "node scripts/setup-dev.js",
     "prepare": "husky install",
     "postinstall": "husky install"
   },
@@ -78,6 +81,7 @@
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "axe-core": "^4.8.5",
+    "chokidar": "^3.6.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.5.3",
     "eslint-config-prettier": "^9.1.0",
@@ -98,6 +102,7 @@
     "prettier": "^3.3.0",
     "prettier-plugin-tailwindcss": "^0.6.0",
     "storybook": "^8.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "5.9.2"
   },
   "lint-staged": {

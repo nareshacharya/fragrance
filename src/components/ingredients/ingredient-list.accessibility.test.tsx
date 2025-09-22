@@ -268,3 +268,4 @@ describe('IngredientList Accessibility', () => {
     expect(customItems[0]).toHaveAttribute('aria-label', 'Custom Lavender');
   });
 });
+

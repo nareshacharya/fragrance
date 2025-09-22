@@ -2,8 +2,8 @@
  * Accessibility utilities index file for easy imports of all accessibility utilities, hooks, and constants
  */
 
-// Testing utilities
-export * from './testing';
+// Testing utilities are available via './testing' import
+// export * from './testing';
 
 // Focus management utilities
 export * from './focus-management';
@@ -21,16 +21,17 @@ export * from './constants';
 export * from './hooks';
 
 // Re-export commonly used utilities for convenience from their correct source modules
-export {
-  // Testing utilities
-  renderWithAccessibility,
-  testKeyboardNavigation,
-  testScreenReaderSupport,
-  testFocusManagement,
-  testColorContrast,
-  testFormAccessibility,
-  accessibilityMatchers
-} from './testing';
+// Testing utilities are available via './testing' import
+// export {
+//   // Testing utilities
+//   renderWithAccessibility,
+//   testKeyboardNavigation,
+//   testScreenReaderSupport,
+//   testFocusManagement,
+//   testColorContrast,
+//   testFormAccessibility,
+//   accessibilityMatchers
+// } from './testing';
 
 export {
   // Screen reader utilities
@@ -89,11 +90,12 @@ export {
 } from './hooks';
 
 // Export types for TypeScript users
-export type {
-  AccessibilityTestOptions,
-  KeyboardNavigationTestOptions,
-  ScreenReaderTestOptions
-} from './testing';
+// Testing types are available via './testing' import
+// export type {
+//   AccessibilityTestOptions,
+//   KeyboardNavigationTestOptions,
+//   ScreenReaderTestOptions
+// } from './testing';
 
 export type {
   FocusTrapOptions,

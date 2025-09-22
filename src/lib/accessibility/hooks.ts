@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Accessibility hooks for React components including useAnnouncement, useFocusTrap, useKeyboardNavigation, and useAccessibleForm
  */
@@ -384,7 +386,7 @@ export function useAccessibleForm(options: UseAccessibleFormOptions = {}) {
     customSuccessMessages = {}
   } = options;
 
-  const { announce, announceError, announceSuccess } = useAnnouncement();
+  const { announce, announceError, announceSuccess: announceSuccessFn } = useAnnouncement();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [successes, setSuccesses] = useState<Record<string, string>>({});
 
@@ -402,9 +404,9 @@ export function useAccessibleForm(options: UseAccessibleFormOptions = {}) {
     setSuccesses(prev => ({ ...prev, [fieldName]: message }));
     
     if (announceSuccess) {
-      announceSuccess(`${fieldName}: ${message}`);
+      announceSuccessFn(`${fieldName}: ${message}`);
     }
-  }, [customSuccessMessages, announceSuccess, announceSuccess]);
+  }, [customSuccessMessages, announceSuccess, announceSuccessFn]);
 
   const clearFieldError = useCallback((fieldName: string) => {
     setErrors(prev => {
@@ -445,11 +447,11 @@ export function useAccessibleForm(options: UseAccessibleFormOptions = {}) {
     if (status === 'error') {
       announceError(message);
     } else if (status === 'success') {
-      announceSuccess(message);
+      announceSuccessFn(message);
     } else {
       announce(message);
     }
-  }, [announce, announceError, announceSuccess]);
+  }, [announce, announceError, announceSuccessFn]);
 
   const announceRequiredField = useCallback((fieldName: string) => {
     if (announceRequired) {

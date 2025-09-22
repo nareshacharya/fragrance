@@ -1,0 +1,54 @@
+# Development Dockerfile for Fragrance Management System
+# Optimized for development with hot reload and debugging
+
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies for development
+RUN apk add --no-cache \
+    libc6-compat \
+    git \
+    curl \
+    bash \
+    vim
+
+# Create non-root user for development
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy package files
+COPY package*.json ./
+COPY yarn.lock* ./
+COPY pnpm-lock.yaml* ./
+
+# Install dependencies (including dev dependencies)
+RUN \
+  if [ -f yarn.lock ]; then yarn install; \
+  elif [ -f package-lock.json ]; then npm install; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+# Copy source code
+COPY . .
+
+# Set ownership to nextjs user
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+# Set environment variables for development
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Create necessary directories
+RUN mkdir -p uploads logs
+
+# Expose port
+EXPOSE 3000
+
+# Start development server
+CMD ["npm", "run", "dev"]

@@ -223,3 +223,4 @@ describe('LoginForm Accessibility', () => {
     expect(emailInput).toHaveFocus();
   });
 });
+

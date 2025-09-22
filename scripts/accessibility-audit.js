@@ -481,3 +481,4 @@ main().catch(error => {
   logError(`Error: ${error.message}`);
   process.exit(1);
 });
+

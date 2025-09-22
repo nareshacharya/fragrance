@@ -386,3 +386,4 @@ Accessibility testing is an ongoing process. Regularly:
 5. **Train Team Members** - Keep everyone informed about accessibility best practices
 
 Remember: Accessibility is not a one-time task but an ongoing commitment to inclusive design.
+

@@ -411,7 +411,10 @@ export const testModalAccessibilityFeatures = (modal: HTMLElement) => {
 
 export const testButtonAccessibilityFeatures = (button: HTMLElement) => {
   // Check button accessibility features
-  expect(button).toHaveAttribute('role', 'button');
+  const tag = button.tagName.toLowerCase();
+  if (tag !== 'button') {
+    expect(button).toHaveAttribute('role', 'button');
+  }
   expect(button).toHaveAttribute('aria-label');
 };
 

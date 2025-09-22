@@ -630,3 +630,4 @@ const MyComponent = () => {
 ```
 
 Remember: Accessibility is not optional - it's a fundamental requirement for inclusive design. Always test your components with real users and assistive technologies to ensure they work for everyone.
+

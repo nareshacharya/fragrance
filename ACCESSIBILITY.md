@@ -643,3 +643,4 @@ For accessibility questions or issues:
 Accessibility is not just a compliance requirement—it's a fundamental aspect of creating inclusive software that works for everyone. By following these guidelines and using the provided utilities, you can ensure that the Fragrance Management System is accessible to all users, regardless of their abilities or the tools they use to interact with the system.
 
 Remember to test early and often, involve users with disabilities in your testing process, and continuously improve the accessibility of your components and features.
+

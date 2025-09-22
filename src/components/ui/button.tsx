@@ -70,7 +70,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ...props 
   }, ref) => {
     const Comp = asChild ? Slot : 'button'
-    const { announce, announceLoading: doAnnounceLoading, announceLoadingComplete: doAnnounceLoadingComplete } = useAnnouncement()
+    const { announce, announceLoading: announceLoadingHook, announceLoadingComplete: doAnnounceLoadingComplete } = useAnnouncement()
     const [isPressed, setIsPressed] = React.useState(pressed || false)
     const [isLoading, setIsLoading] = React.useState(loading)
 
@@ -80,13 +80,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         setIsLoading(loading)
         if (announceLoading) {
           if (loading) {
-            doAnnounceLoading()
+            announceLoadingHook()
           } else {
             doAnnounceLoadingComplete()
           }
         }
       }
-    }, [loading, isLoading, announceLoading, doAnnounceLoading, doAnnounceLoadingComplete])
+    }, [loading, isLoading, announceLoading, announceLoadingHook, doAnnounceLoadingComplete])
 
     // Update pressed state when prop changes
     React.useEffect(() => {

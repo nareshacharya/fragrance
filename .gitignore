@@ -300,3 +300,25 @@ storybook-static
 # Local configuration overrides
 config/local.js
 config/local.json
+
+# Configuration cache and temporary files
+.config-cache/
+config-cache.json
+*.config.tmp
+
+# Environment-specific configuration files
+.env.*.local
+config/environments/*.local.ts
+config/environments/*.local.js
+
+# Configuration validation reports
+config-validation-report.json
+config-validation-report.html
+
+# Configuration documentation build
+docs/config-generated/
+config-docs/
+
+# Configuration test artifacts
+config-test-results/
+config-coverage/

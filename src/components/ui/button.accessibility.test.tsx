@@ -22,7 +22,6 @@ describe('Button Accessibility', () => {
       render(<Button>Click me</Button>);
       const button = screen.getByRole('button');
       
-      expect(button).toHaveAttribute('role', 'button');
       expect(button).toHaveAttribute('aria-disabled', 'false');
       expect(button).toHaveAttribute('aria-pressed', 'false');
     });
@@ -228,7 +227,7 @@ describe('Button Accessibility', () => {
     });
 
     it('should have visible focus indicator', async () => {
-      const { container } = renderWithAccessibility(<Button>Button</Button>);
+      const { container } = renderWithA11y(<Button>Button</Button>);
       const button = screen.getByRole('button');
       
       button.focus();
@@ -238,12 +237,12 @@ describe('Button Accessibility', () => {
 
   describe('Color Contrast', () => {
     it('should have sufficient color contrast', async () => {
-      const { container } = renderWithAccessibility(<Button>Button</Button>);
+      const { container } = renderWithA11y(<Button>Button</Button>);
       await expect(container).toHaveNoViolations();
     });
 
     it('should have sufficient color contrast in secondary variant', async () => {
-      const { container } = renderWithAccessibility(<Button variant="secondary">Secondary Button</Button>);
+      const { container } = renderWithA11y(<Button variant="secondary">Secondary Button</Button>);
       await expect(container).toHaveNoViolations();
     });
 
@@ -251,7 +250,7 @@ describe('Button Accessibility', () => {
       const variants = ['primary', 'secondary', 'outline', 'ghost', 'link', 'destructive'];
       
       for (const variant of variants) {
-        const { container } = renderWithAccessibility(<Button variant={variant as any}>Button</Button>);
+        const { container } = renderWithA11y(<Button variant={variant as any}>Button</Button>);
         await expect(container).toHaveNoViolations();
       }
     });
@@ -295,13 +294,13 @@ describe('Button Accessibility', () => {
       const button = result.getByRole('button');
       
       // Test ARIA attributes
-      result.testAriaAttributes(button, {
+      testAriaAccessibility(button, {
         'aria-disabled': 'false',
         'aria-pressed': 'false',
       });
       
       // Test button accessibility
-      result.testButtonAccessibility('button');
+      testButtonAccessibilityFeatures(button);
     });
 
     it('should work with form integration', async () => {

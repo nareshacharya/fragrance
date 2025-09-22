@@ -250,3 +250,4 @@ describe('Modal Accessibility', () => {
     expect(trigger).toHaveFocus();
   });
 });
+

@@ -39,7 +39,6 @@ export type {
   ComponentProtection,
   AuthError,
   SessionTimeoutConfig,
-  AuthConfig,
   UserActivityEvent,
   UseAuthReturn,
   UseUserReturn,
@@ -590,3 +589,33 @@ export interface AuditLog {
   ipAddress?: string
   userAgent?: string
 }
+
+// Configuration Types - Import from config
+export type {
+  FeatureConfigs,
+  FeatureName,
+  Environment,
+  ValidationResult as ConfigValidationResult,
+  ValidationError as ConfigValidationError,
+  ConfigLoadOptions,
+  ConfigCacheInfo as ConfigCacheOptions,
+  ConfigChangeEvent,
+  HealthCheckResult,
+  FeatureFlag,
+} from '@/config'
+
+// Individual feature config types - Import from features
+export type {
+  AuthConfig,
+  ApiConfig,
+  DatabaseConfig,
+  UiConfig,
+  IngredientsConfig,
+  CaseManagementConfig,
+  MonitoringConfig,
+  SecurityConfig,
+  FilesConfig,
+  NotificationsConfig,
+  FeatureFlagsConfig,
+  DevToolsConfig,
+} from '@/config/features'

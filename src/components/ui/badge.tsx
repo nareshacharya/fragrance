@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '../../lib/utils'
+import { ARIA_ROLES } from '../../lib/accessibility/constants'
 
 const badgeVariants = cva(
   'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
@@ -30,11 +31,33 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  status?: 'success' | 'error' | 'warning' | 'info' | 'default'
+  ariaLabel?: string
+  role?: string
+}
 
-function Badge({ className, variant, size, ...props }: BadgeProps) {
+function Badge({ className, variant, size, status, ariaLabel, role, children, ...props }: BadgeProps) {
+  // Determine variant based on status if not explicitly provided
+  const badgeVariant = variant || (status ? status : 'default')
+  
+  // Generate accessible label
+  const accessibleLabel = ariaLabel || (typeof children === 'string' ? children : undefined)
+  
   return (
-    <div className={cn(badgeVariants({ variant, size }), className)} {...props} />
+    <div 
+      className={cn(badgeVariants({ variant: badgeVariant, size }), className)} 
+      role={role || ARIA_ROLES.STATUS}
+      aria-label={accessibleLabel}
+      {...props}
+    >
+      {children}
+      {status && !ariaLabel && (
+        <span className="sr-only">
+          Status: {status}
+        </span>
+      )}
+    </div>
   )
 }
 

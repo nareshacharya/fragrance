@@ -517,6 +517,46 @@ export type {
   INGREDIENT_CATEGORY_COLORS,
 } from './ingredient'
 
+// Accessibility Types - Import from accessibility.ts
+export type {
+  AnnouncementPriority,
+  NavigationOrientation,
+  ValidationType,
+  FocusTrapOptions,
+  KeyboardNavigationOptions,
+  KeyboardHandler,
+  ArrowNavigationOptions,
+  AnnouncementOptions,
+  LiveRegionOptions,
+  AccessibilityTestOptions,
+  KeyboardNavigationTestOptions,
+  ScreenReaderTestOptions,
+  AccessibleFormOptions,
+  AccessibilityState,
+  SkipLink,
+  AccessibilityComponentProps,
+  ModalAccessibilityProps,
+  DropdownAccessibilityProps,
+  FormFieldAccessibilityProps,
+  LoadingAccessibilityProps,
+  NavigationAccessibilityProps,
+  AriaAttributes,
+  KeyboardShortcut,
+  FocusManager,
+  AccessibilityConfig,
+  AccessibilityViolation,
+  AccessibilityTestResult,
+  UseAnnouncementReturn,
+  UseFocusTrapReturn,
+  UseKeyboardNavigationReturn,
+  UseArrowNavigationReturn,
+  UseModalKeyboardNavigationReturn,
+  UseLiveRegionReturn,
+  UseAccessibleFormReturn,
+  UseAccessibilityStateReturn,
+  UseSkipLinksReturn,
+} from './accessibility'
+
 // Error Types
 export interface ValidationError {
   field: string

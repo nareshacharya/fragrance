@@ -8,6 +8,9 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth, validateCredentials, createCommonAuthErrors } from '@/lib/auth'
 import type { LoginFormProps, AuthCredentials } from '@/lib/auth'
+import { useAccessibleForm, useAnnouncement } from '../../lib/accessibility/hooks'
+import { ScreenReaderAnnouncement } from '../ui/screen-reader-announcement'
+import { ARIA_ROLES, STANDARD_LABELS } from '../../lib/accessibility/constants'
 
 /**
  * Login form component with validation and error handling
@@ -31,6 +34,33 @@ export function LoginForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [loginAttempts, setLoginAttempts] = useState(0)
+  const [isLocked, setIsLocked] = useState(false)
+  
+  // Accessibility form hook
+  const formRef = React.useRef<HTMLFormElement>(null)
+  const {
+    errors: formErrors,
+    successes: formSuccesses,
+    hasErrors,
+    hasSuccesses,
+    setFieldError,
+    setFieldSuccess,
+    clearFieldError,
+    clearFieldSuccess,
+    clearAllErrors,
+    clearAllSuccesses,
+    getFieldError,
+    getFieldSuccess,
+    announceFormStatus,
+    announceRequiredField
+  } = useAccessibleForm({
+    announceErrors: true,
+    announceSuccess: true,
+    announceRequired: true,
+  })
+  
+  const { announce } = useAnnouncement()
 
   // Auto-fill with demo credentials for easier testing
   useEffect(() => {
@@ -50,6 +80,20 @@ export function LoginForm({
     // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))
+      clearFieldError(field)
+    }
+  }
+
+  /**
+   * Handle field blur with validation
+   */
+  const handleFieldBlur = (fieldName: string) => {
+    // Run validation for the specific field
+    const validation = validateCredentials(formData)
+    if (validation.errors[fieldName]) {
+      setFieldError(fieldName, validation.errors[fieldName])
+    } else {
+      clearFieldError(fieldName)
     }
   }
 
@@ -59,29 +103,50 @@ export function LoginForm({
   const validateForm = (): boolean => {
     const validation = validateCredentials(formData)
     setErrors(validation.errors)
+    
+    // Update accessible form errors
+    clearAllErrors()
+    Object.entries(validation.errors).forEach(([field, error]) => {
+      setFieldError(field, error)
+    })
+    
     return validation.isValid
   }
 
   /**
-   * Handle form submission
+   * Handle form submission with accessibility features
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Check if account is locked
+    if (isLocked) {
+      announce('Account is locked. Please contact administrator.', {
+        politeness: 'assertive',
+        priority: 'high',
+      })
+      return
+    }
+    
     if (!validateForm()) {
+      announceFormStatus('error', 'Please correct the errors and try again')
       return
     }
 
     setIsSubmitting(true)
     setErrors({})
+    
+    // Announce loading state
+    announce('Signing in...')
 
     try {
       await login(formData)
       
+      // Announce success
+      announceFormStatus('success', 'Login successful. Redirecting...')
+      
       // Call success callback if provided
       if (onSuccess) {
-        // We'll need to get the auth response from the context
-        // For now, we'll just call it without parameters
         onSuccess({} as any)
       }
       
@@ -90,24 +155,47 @@ export function LoginForm({
     } catch (error: any) {
       console.error('Login error:', error)
       
-      // Handle different types of errors
-      if (error.code === 'INVALID_CREDENTIALS') {
-        setErrors({ 
-          email: 'Invalid email or password',
-          password: 'Invalid email or password' 
+      setLoginAttempts(prev => prev + 1)
+      
+      // Lock account after 3 failed attempts
+      if (loginAttempts >= 2) {
+        setIsLocked(true)
+        announce('Account locked due to multiple failed attempts. Please contact administrator.', {
+          politeness: 'assertive',
+          priority: 'high',
         })
-      } else if (error.code === 'ACCOUNT_LOCKED') {
         setErrors({ 
-          email: 'Account is locked. Please contact administrator.' 
-        })
-      } else if (error.code === 'NETWORK_ERROR') {
-        setErrors({ 
-          email: 'Network error. Please check your connection and try again.' 
+          email: 'Account locked due to multiple failed attempts. Please contact administrator.' 
         })
       } else {
-        setErrors({ 
-          email: error.message || 'An error occurred during login' 
-        })
+        // Handle different types of errors
+        let errorMessage = 'An error occurred during login'
+        
+        if (error.code === 'INVALID_CREDENTIALS') {
+          errorMessage = 'Invalid email or password'
+          setErrors({ 
+            email: errorMessage,
+            password: errorMessage 
+          })
+        } else if (error.code === 'ACCOUNT_LOCKED') {
+          errorMessage = 'Account is locked. Please contact administrator.'
+          setErrors({ 
+            email: errorMessage 
+          })
+        } else if (error.code === 'NETWORK_ERROR') {
+          errorMessage = 'Network error. Please check your connection and try again.'
+          setErrors({ 
+            email: errorMessage 
+          })
+        } else {
+          errorMessage = error.message || 'An error occurred during login'
+          setErrors({ 
+            email: errorMessage 
+          })
+        }
+        
+        // Announce error to screen readers
+        announceFormStatus('error', errorMessage)
       }
       
       // Call error callback if provided
@@ -124,55 +212,80 @@ export function LoginForm({
     <Card className={`w-full max-w-md mx-auto ${className}`}>
       <CardContent className="pt-6">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Sign In</h2>
+          <h1 id="login-form-title" className="text-2xl font-bold text-gray-900">Sign In</h1>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form 
+          ref={formRef}
+          onSubmit={handleSubmit} 
+          className="space-y-4"
+          aria-labelledby="login-form-title"
+          noValidate
+        >
+          {/* Live region for announcements */}
+          <ScreenReaderAnnouncement />
           {/* Email Field */}
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email" required error={!!errors.email}>
+              Email Address
+            </Label>
             <Input
               id="email"
               type="email"
               placeholder="Enter your email"
               value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
+              onChange={(e) => {
+                handleInputChange('email', e.target.value)
+              }}
+              onBlur={() => handleFieldBlur('email')}
               error={!!errors.email}
               errorText={errors.email}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLocked}
               required
               autoComplete="email"
               autoFocus
+              ariaLabel="Email address"
             />
           </div>
 
           {/* Password Field */}
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" required error={!!errors.password}>
+              Password
+            </Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
+                onChange={(e) => {
+                  handleInputChange('password', e.target.value)
+                }}
+                onBlur={() => handleFieldBlur('password')}
                 error={!!errors.password}
                 errorText={errors.password}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLocked}
                 required
                 autoComplete="current-password"
+                ariaLabel="Password"
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
-                onClick={() => setShowPassword(!showPassword)}
-                disabled={isSubmitting}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                onClick={() => {
+                  setShowPassword(!showPassword)
+                  announce(showPassword ? 'Password hidden' : 'Password visible')
+                }}
+                disabled={isSubmitting || isLocked}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
               >
                 {showPassword ? (
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
                   </svg>
                 ) : (
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
@@ -189,8 +302,9 @@ export function LoginForm({
                 type="checkbox"
                 checked={formData.rememberMe}
                 onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLocked}
                 className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
+                aria-describedby="rememberMe-description"
               />
               <Label htmlFor="rememberMe" className="text-sm text-neutral-600 dark:text-neutral-400">
                 Remember me for 30 days
@@ -202,11 +316,34 @@ export function LoginForm({
           <Button
             type="submit"
             className="w-full"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLocked}
             loading={isSubmitting}
+            ariaLabel={isSubmitting ? 'Signing in, please wait' : 'Sign in to your account'}
           >
-            {isSubmitting ? 'Signing In...' : 'Sign In'}
+            {isSubmitting ? 'Signing In...' : isLocked ? 'Account Locked' : 'Sign In'}
           </Button>
+          
+          {/* Account lock warning */}
+          {isLocked && (
+            <div 
+              className="mt-4 p-3 bg-warning-50 border border-warning-200 rounded-md dark:bg-warning-950 dark:border-warning-800"
+              role="alert"
+              aria-live="assertive"
+            >
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-warning-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-warning-800 dark:text-warning-200">
+                    Account locked due to multiple failed attempts. Please contact administrator.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </form>
 
         {/* Error Display */}

@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '../components/providers/theme-provider'
 import { AuthProvider } from '@/lib/auth'
+import { SkipNav } from '../components/ui/skip-nav'
+import { ScreenReaderAnnouncement } from '../components/ui/screen-reader-announcement'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -79,15 +81,21 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider defaultTheme="system" storageKey="fragrance-theme">
           <AuthProvider>
+            {/* Skip Navigation */}
+            <SkipNav />
+            
+            {/* Global Screen Reader Announcements */}
+            <ScreenReaderAnnouncement message="" />
+            
             <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-primary-50 dark:from-neutral-950 dark:to-neutral-900">
               <div className="relative">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] dark:[mask-image:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0))]" />
                 
                 {/* Main Content */}
-                <div className="relative">
+                <main id="main-content" className="relative">
                   {children}
-                </div>
+                </main>
               </div>
             </div>
           </AuthProvider>

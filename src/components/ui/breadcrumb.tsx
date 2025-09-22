@@ -7,6 +7,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { ChevronRight, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { BreadcrumbItem } from '@/types/navigation'
+import { ARIA_ROLES } from '../../lib/accessibility/constants'
 
 const breadcrumbVariants = cva(
   'flex items-center space-x-1 text-sm font-medium text-muted-foreground',
@@ -223,13 +224,19 @@ const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
         {items.length > maxItems && (
           <button
             type="button"
-            className="ml-2 text-xs text-muted-foreground hover:text-foreground"
+            className="ml-2 text-xs text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
             onClick={() => setIsCollapsed(!isCollapsed)}
             aria-label={isCollapsed ? 'Show more breadcrumbs' : 'Show fewer breadcrumbs'}
+            aria-expanded={!isCollapsed}
           >
             {isCollapsed ? 'Show more' : 'Show less'}
           </button>
         )}
+        
+        {/* Screen reader only current location */}
+        <span className="sr-only">
+          Current location: {processedItems[processedItems.length - 1]?.label || 'Unknown'}
+        </span>
       </nav>
     )
   }

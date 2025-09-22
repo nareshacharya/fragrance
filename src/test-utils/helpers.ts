@@ -1,6 +1,16 @@
 import { ReactElement } from 'react';
 import { screen, within, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { 
+  renderWithAccessibility,
+  testKeyboardNavigation,
+  testScreenReaderSupport,
+  testFocusManagement,
+  testColorContrast,
+  testFormAccessibility,
+  accessibilityMatchers,
+} from '../lib/accessibility/testing';
 
 // User event helpers
 export const createUserEvent = () => userEvent.setup();
@@ -345,8 +355,87 @@ export const goToPreviousPage = async () => {
   return prevButton;
 };
 
-// Accessibility helpers
-export const checkAccessibility = (element: HTMLElement) => {
+// Enhanced accessibility helpers
+export const checkAccessibility = async (element: HTMLElement) => {
+  const results = await axe(element);
+  return results;
+};
+
+export const expectAccessible = async (element: HTMLElement) => {
+  await expect(element).toHaveNoViolations();
+};
+
+export const testAccessibility = async (element: HTMLElement, options?: any) => {
+  await expect(element).toBeAccessible(options);
+};
+
+export const testKeyboardAccessibility = async (element: HTMLElement, options?: any) => {
+  await testKeyboardNavigation(element, options);
+};
+
+export const testAriaAccessibility = (element: HTMLElement, expectedAttributes: Record<string, string | boolean>) => {
+  Object.entries(expectedAttributes).forEach(([attr, value]) => {
+    expect(element.getAttribute(attr)).toBe(value.toString());
+  });
+};
+
+export const testScreenReaderAccessibility = async (container: HTMLElement, options?: any) => {
+  await testScreenReaderSupport(container, options);
+};
+
+export const testFocusAccessibility = async (element: HTMLElement) => {
+  await testFocusManagement(element);
+};
+
+export const testSemanticAccessibility = (element: HTMLElement) => {
+  // Check for proper semantic structure
+  const headings = element.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"]');
+  const landmarks = element.querySelectorAll('[role="banner"], [role="navigation"], [role="main"], [role="complementary"], [role="contentinfo"]');
+  
+  expect(headings.length).toBeGreaterThan(0);
+  expect(landmarks.length).toBeGreaterThan(0);
+};
+
+export const testFormAccessibilityFeatures = (form: HTMLFormElement) => {
+  testFormAccessibility(form);
+};
+
+export const testModalAccessibilityFeatures = (modal: HTMLElement) => {
+  // Check modal accessibility features
+  expect(modal).toHaveAttribute('role', 'dialog');
+  expect(modal).toHaveAttribute('aria-modal', 'true');
+  
+  const title = modal.querySelector('[id*="title"]') || modal.querySelector('h1, h2, h3, h4, h5, h6');
+  expect(title).toBeInTheDocument();
+};
+
+export const testButtonAccessibilityFeatures = (button: HTMLElement) => {
+  // Check button accessibility features
+  expect(button).toHaveAttribute('role', 'button');
+  expect(button).toHaveAttribute('aria-label');
+};
+
+export const testLinkAccessibilityFeatures = (link: HTMLElement) => {
+  // Check link accessibility features
+  expect(link).toHaveAttribute('href');
+  expect(link).toHaveAttribute('aria-label');
+};
+
+export const renderWithA11y = (ui: ReactElement, options?: any) => {
+  return renderWithAccessibility(ui, options);
+};
+
+// Legacy accessibility helpers for backward compatibility
+export const checkKeyboardNavigation = async (elements: HTMLElement[]) => {
+  const user = createUserEvent();
+  
+  for (let i = 0; i < elements.length; i++) {
+    await user.tab();
+    expect(elements[i]).toHaveFocus();
+  }
+};
+
+export const checkBasicAccessibility = (element: HTMLElement) => {
   // Check for aria labels
   const hasAriaLabel = element.hasAttribute('aria-label') || element.hasAttribute('aria-labelledby');
   
@@ -363,15 +452,6 @@ export const checkAccessibility = (element: HTMLElement) => {
     isFocusable,
     isAccessible: hasAriaLabel && isFocusable,
   };
-};
-
-export const checkKeyboardNavigation = async (elements: HTMLElement[]) => {
-  const user = createUserEvent();
-  
-  for (let i = 0; i < elements.length; i++) {
-    await user.tab();
-    expect(elements[i]).toHaveFocus();
-  }
 };
 
 // Error helpers
@@ -573,9 +653,24 @@ export default {
   goToNextPage,
   goToPreviousPage,
   
-  // Accessibility helpers
+  // Enhanced accessibility helpers
   checkAccessibility,
+  expectAccessible,
+  testAccessibility,
+  testKeyboardAccessibility,
+  testAriaAccessibility,
+  testScreenReaderAccessibility,
+  testFocusAccessibility,
+  testSemanticAccessibility,
+  testFormAccessibilityFeatures,
+  testModalAccessibilityFeatures,
+  testButtonAccessibilityFeatures,
+  testLinkAccessibilityFeatures,
+  renderWithA11y,
+  
+  // Legacy accessibility helpers
   checkKeyboardNavigation,
+  checkBasicAccessibility,
   
   // Error helpers
   expectError,

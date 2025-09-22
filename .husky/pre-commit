@@ -6,3 +6,6 @@ npx lint-staged
 
 # Run fast unit tests for changed files
 npm run test:unit -- --bail --findRelatedTests
+
+# Run accessibility tests for changed files
+npm run test:a11y -- --bail --findRelatedTests

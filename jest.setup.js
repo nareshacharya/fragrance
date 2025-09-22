@@ -8,6 +8,15 @@ import '@/test-utils/msw-server';
 import '@/test-utils/test-config';
 
 import '@testing-library/jest-dom';
+import 'jest-axe/extend-expect';
+
+// Import accessibility testing utilities
+import { toHaveNoViolations } from 'jest-axe';
+import { accessibilityMatchers } from '@/lib/accessibility/testing';
+
+// Extend Jest matchers for accessibility testing
+expect.extend(toHaveNoViolations);
+expect.extend(accessibilityMatchers);
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -99,4 +108,16 @@ afterAll(() => {
 // Clean up after each test
 afterEach(() => {
   jest.clearAllMocks();
+  
+  // Clean up any accessibility testing artifacts
+  const liveRegions = document.querySelectorAll('[aria-live]');
+  liveRegions.forEach(region => {
+    region.textContent = '';
+  });
+  
+  // Clear any focus management artifacts
+  const focusTraps = document.querySelectorAll('[data-focus-trap]');
+  focusTraps.forEach(trap => {
+    trap.removeAttribute('data-focus-trap');
+  });
 });
